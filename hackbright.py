@@ -78,7 +78,7 @@ def get_grade_by_github_title(github, title):
         SELECT grade
         FROM grades
         WHERE student_github = :github_placeholder 
-                AND project_title AND :title_placeholder
+                AND project_title = :title_placeholder
         """
 
     db_cursor = db.session.execute(QUERY, {'github_placeholder' : github, 
@@ -116,6 +116,15 @@ def handle_input():
     command = None
 
     while command != "quit":
+        print()
+        print("Here are your options:")
+        print("Command: student  *Action: Look up student info with github  *Requires: github")
+        print("Command: new_student  *Action: add a new student  *Requires: first_name, last_name, github")
+        print("Command: get_project  *Action: get description of project *Requires: project_title")
+        print("Command: get_grade  *Action: see grade for student's project  *Requires: github, project_title")
+        print("Command: assign_grade  *Action: log a student's grade  *Requires: github, project_title, grade")
+        print("Command: quit *Action: You can probably figure this out")
+        print()
         input_string = input("HBA Database> ")
         tokens = input_string.split()
         command = tokens[0]
@@ -134,7 +143,8 @@ def handle_input():
             get_project_by_title(title)
 
         elif command == "get_grade":
-            github, title = args
+            github = args[0]
+            title = " ".join(args[1:])
             get_grade_by_github_title(github, title)
 
         elif command == "assign_grade":
